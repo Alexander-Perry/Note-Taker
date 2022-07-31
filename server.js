@@ -37,7 +37,7 @@ app.post('/api/notes', (req, res) => {
     console.log('req.body:', req.body);
     const { title, text } = req.body;
     if (title && text) {
-        const newNote = {'id': uuidv4(), title, text};
+        const newNote = { 'id': uuidv4(), title, text };
         const response = {
             status: 'success',
             data: newNote,
@@ -50,7 +50,7 @@ app.post('/api/notes', (req, res) => {
             } else {
                 const notes = JSON.parse(data);
                 // add new note to data
-                notes.push(newNote); 
+                notes.push(newNote);
                 // write new combined data to db.json
                 fs.writeFile('./db/db.json', JSON.stringify(notes), (err) =>
                     err ? console.error(err) : console.info('Note Saved')
@@ -63,6 +63,41 @@ app.post('/api/notes', (req, res) => {
     };
 
 });
+
+// DELETE /api/notes - read existing db.json data, find object by id, remove it, and rewrite the JSON
+app.delete('/api/notes/:id', (req, res) => {
+    console.log('Delete: req.body:', req.body);
+    console.log('Delete: req.params:', req.params);
+    console.log('Delete: req.params.id:', req.params.id);
+    // res.send('success');
+
+    const id = req.params.id;
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            // res.status blah
+        } else {
+            const notes = JSON.parse(data);
+            console.log('notes', notes);
+            const filteredNotes = notes.filter(index => index.id != id);
+            fs.writeFile('./db/db.json', JSON.stringify(filteredNotes), (err) =>
+                err ? console.error(err) : console.info('Updated Notes')
+            );
+            res.status(200).json(`${id} removed`);
+        };
+    });
+});
+
+
+//         // add new note to data
+
+//         // notes.push(newNote); 
+//         // write new combined data to db.json
+//         // fs.writeFile('./db/db.json', JSON.stringify(notes), (err) =>
+//             // err ? console.error(err) : console.info('Note Saved')
+//         // );
+//     }
+// });
 
 
 // Wildcard listener for invalid URL
