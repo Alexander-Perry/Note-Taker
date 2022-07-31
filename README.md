@@ -28,8 +28,8 @@ https://dry-oasis-70005.herokuapp.com/
 
 ## Usage
 
-node server.js
-Navigate to http://localhost:3001 
+* node server.js
+* Navigate to http://localhost:3001 
 
 ## Testing
 
