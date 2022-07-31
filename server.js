@@ -79,5 +79,5 @@ app.delete('/api/notes/:id', (req, res) => {
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
 
 // Initialise server
-app.listen(PORT, () => console.log('Listening on Port 3001'));
+app.listen(PORT, () => console.log(`Listening on Port ${PORT}`));
 
