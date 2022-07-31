@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/static/v1?label=License&message=MIT&color=blue)](https://opensource.org/licenses/MIT)
 
 ## Description
-express.js application for note taking, allowing persistent data, adding, viewing and removing notes
+express.js application for note taking, allowing adding, viewing and removing notes with persistent data
 
 ## Deployment
 https://dry-oasis-70005.herokuapp.com/
