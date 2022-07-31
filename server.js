@@ -2,12 +2,17 @@
 const express = require('express');
 const path = require('path');
 const noteData = require('./db/db.json');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
+// const uuid = require('./helpers/uuid');
 
 // use express
 const app = express();
-const PORT = process.env.port || 3001; 
+const PORT = process.env.port || 3001;
 // use static refs
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Navitage to index.html
 app.get('/', (req, res) => res.send('navigate to index.html'));
@@ -15,14 +20,48 @@ app.get('/', (req, res) => res.send('navigate to index.html'));
 // Listen for /notes and navigate to /public/notes.html
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public/notes.html')));
 
-// listen to api/notes, return db.json
+// GET /api/notes - read db.json and return data
 app.get('/api/notes', (req, res) => {
-    return res.json(noteData);
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+        } else {
+            const notes = JSON.parse(data);
+            return res.json(notes);
+        };
+    });
 });
 
+// POST /api/notes - read existing db.json data, add new entry
 app.post('/api/notes', (req, res) => {
-// post data
-    
+    console.log('req.body:', req.body);
+    const { title, text } = req.body;
+    if (title && text) {
+        const newNote = {'id': uuidv4(), title, text};
+        const response = {
+            status: 'success',
+            data: newNote,
+        };
+        console.log(response);
+        // read existing db.json data
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
+            if (err) {
+                console.error(err);
+            } else {
+                const notes = JSON.parse(data);
+                // add new note to data
+                notes.push(newNote); 
+                // write new combined data to db.json
+                fs.writeFile('./db/db.json', JSON.stringify(notes), (err) =>
+                    err ? console.error(err) : console.info('Note Saved')
+                );
+            }
+        });
+        res.status(201).json(response);
+    } else {
+        res.status(500).json('Error');
+    };
+
 });
 
 
