@@ -16,7 +16,7 @@ function readJSON() {
     return fs.readFileSync('./db/db.json', 'utf8', (err, data) => {
         if (err) {
             console.error(err);
-            return error;
+            return false;
         } else {
             return data;
         }
