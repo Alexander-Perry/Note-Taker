@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 
 // Express.js
 const app = express();
-const PORT = process.env.port || 3001;
+const PORT = process.env.PORT || 3001;
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -34,7 +34,7 @@ function writeJSON(data) {
 };
 
 // Navitage to index.html
-app.get('/', (req, res) => res.send('index.html'));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/public/index.html')));
 
 // Listen for /notes and navigate to /public/notes.html
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public/notes.html')));
